@@ -1,0 +1,162 @@
+version: '3.8'
+
+services:
+   # MongoDB databases
+  customer-db:
+    image: mongo:7.0
+    container_name: customer-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sendrailhq
+      MONGO_INITDB_ROOT_PASSWORD: 4icwpb6irb3OZl7d
+      MONGO_INITDB_DATABASE: customer_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - customer_data:/data/db
+    networks:
+      - microservices-network
+
+  product-db:
+    image: mongo:7.0
+    container_name: product-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sendrailhq
+      MONGO_INITDB_ROOT_PASSWORD: 4icwpb6irb3OZl7d
+      MONGO_INITDB_DATABASE: product_db
+    ports:
+      - "27018:27017"
+    volumes:
+      - product_data:/data/db
+    networks:
+      - microservices-network
+
+  order-db:
+    image: mongo:7.0
+    container_name: order-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sendrailhq
+      MONGO_INITDB_ROOT_PASSWORD: 4icwpb6irb3OZl7d
+      MONGO_INITDB_DATABASE: order_db
+    ports:
+      - "27019:27017"
+    volumes:
+      - order_data:/data/db
+    networks:
+      - microservices-network
+
+  payment-db:
+    image: mongo:7.0
+    container_name: payment-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sendrailhq
+      MONGO_INITDB_ROOT_PASSWORD: 4icwpb6irb3OZl7d
+      MONGO_INITDB_DATABASE: payment_db
+    ports:
+      - "27020:27017"
+    volumes:
+      - payment_data:/data/db
+    networks:
+      - microservices-network
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservices-network
+
+  # Customer Service
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      MONGODB_URI: mongodb+srv://sendrailhq:4icwpb6irb3OZl7d@cluster0.yo7xu9n.mongodb.net/e-commerce
+    ports:
+      - "3001:3001"
+    depends_on:
+      - customer-db
+    networks:
+      - microservices-network
+
+  # Product Service
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      MONGODB_URI: mongodb+srv://sendrailhq:4icwpb6irb3OZl7d@cluster0.yo7xu9n.mongodb.net/e-commerce
+    ports:
+      - "3002:3002"
+    depends_on:
+      - product-db
+    networks:
+      - microservices-network
+
+  # Order Service
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    environment:
+      NODE_ENV: production
+      PORT: 3003
+      MONGODB_URI: mongodb+srv://sendrailhq:4icwpb6irb3OZl7d@cluster0.yo7xu9n.mongodb.net/e-commerce
+      CUSTOMER_SERVICE_URL: http://customer-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3002
+      PAYMENT_SERVICE_URL: http://payment-service:3004
+    ports:
+      - "3003:3003"
+    depends_on:
+      - order-db
+      - customer-service
+      - product-service
+      - payment-service
+    networks:
+      - microservices-network
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    environment:
+      NODE_ENV: production
+      PORT: 3004
+      MONGODB_URI: mongodb+srv://sendrailhq:4icwpb6irb3OZl7d@cluster0.yo7xu9n.mongodb.net/e-commerce
+      RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
+    ports:
+      - "3004:3004"
+    depends_on:
+      - payment-db
+      - rabbitmq
+    restart: unless-stopped
+    networks:
+      - microservices-network
+
+volumes:
+  customer_data:
+  product_data:
+  order_data:
+  payment_data:
+  rabbitmq_data:
+
+networks:
+  microservices-network:
+    driver: bridge

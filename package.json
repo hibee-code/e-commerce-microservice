@@ -1,0 +1,29 @@
+{
+  "name": "ecommerce-microservices",
+  "version": "1.0.0",
+  "description": "E-commerce microservices with Node.js, Express, MongoDB, and RabbitMQ",
+  "scripts": {
+    "start": "docker compose up --build",
+    "dev": "docker compose up --build -d",
+    "stop": "docker compose down",
+    "clean": "docker compose down -v",
+    "seed": "node scripts/seedAll.js",
+    "test": "yarn test:customer && yarn test:product && yarn test:order && yarn test:payment",
+    "test:customer": "cd customer-service && yarn test",
+    "test:product": "cd product-service && yarn test",
+    "test:order": "cd order-service && yarn test",
+    "test:payment": "cd payment-service && yarn test",
+    "test:workflow": "node scripts/testWorkflow.js",
+    "install:all": "yarn install:customer && yarn install:product && yarn install:order && yarn install:payment",
+    "install:customer": "cd customer-service && yarn install",
+    "install:product": "cd product-service && yarn install",
+    "install:order": "cd order-service && yarn install",
+    "install:payment": "cd payment-service && yarn install"
+  },
+  "devDependencies": {
+    "axios": "^1.12.2"
+  },
+  "author": "E-commerce Team",
+  "license": "MIT"
+}
+
