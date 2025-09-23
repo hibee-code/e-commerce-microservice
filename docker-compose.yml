@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-   # MongoDB databases
+  # MongoDB databases
   customer-db:
     image: mongo:7.0
     container_name: customer-db
@@ -133,8 +133,8 @@ services:
   # Payment Service
   payment-service:
     build:
-      context: ./payment-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: payment-service/Dockerfile
     container_name: payment-service
     environment:
       NODE_ENV: production

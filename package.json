@@ -24,6 +24,8 @@
     "axios": "^1.12.2"
   },
   "author": "E-commerce Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^8.18.2"
+  }
 }
-

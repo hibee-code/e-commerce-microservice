@@ -2,13 +2,23 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json yarn.lock* ./
+# Copy package files from payment-service directory
+COPY payment-service/package*.json ./
+COPY payment-service/yarn.lock* ./
+
+# Install dependencies
 RUN yarn install --frozen-lockfile --production
 
-COPY --chown=node:node src/ ./src/
+# Copy shared folder from root (if it exists)
+COPY shared/ ./shared/
+
+# Copy payment-service source code
+COPY payment-service/src/ ./src/
+
+# Set ownership and switch to node user
+RUN chown -R node:node /app
+USER node
 
 EXPOSE 3004
 
-USER node
-
-CMD ["sh", "-c", "yarn worker & yarn start"]
+CMD ["yarn", "start"]

@@ -1,6 +1,5 @@
-import Customer from '../models/Customer.js';
-import Joi from 'joi';
-
+const Customer = require('./../model/customer');
+const Joi = require('joi');
 const customerSchema = Joi.object({
   name: Joi.string().min(2).max(100).required(),
   email: Joi.string().email().required(),
