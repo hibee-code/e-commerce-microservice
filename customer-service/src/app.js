@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
 const { connectOptimizedDB } = require('../shared/database');
-const customerRoutes = require('./route/customerRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
 const app = express();
 const PORT = process.env.CUSTOMER_SERVICE_PORT || process.env.PORT || 3001;

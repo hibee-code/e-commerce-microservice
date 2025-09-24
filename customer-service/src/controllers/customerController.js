@@ -1,4 +1,4 @@
-const Customer = require('./../model/customer');
+const Customer = require('../models/Customer');
 const Joi = require('joi');
 const customerSchema = Joi.object({
   name: Joi.string().min(2).max(100).required(),

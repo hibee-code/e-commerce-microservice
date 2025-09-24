@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
-const { connectOptimizedDB } = require('../shared/database');
+//const { connectOptimizedDB } = require('../shared/database');
+const { connectOptimizedDB } = require('../shared/database')
 const paymentRoutes = require('./routes/paymentRoutes');
 const { connectRabbitMQ } = require('./services/rabbitmqService');
 

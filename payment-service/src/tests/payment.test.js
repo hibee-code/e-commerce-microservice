@@ -1,8 +1,8 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../app');
-const Payment = require('../models/Payment');
-const Transaction = require('../models/Transaction');
+const Payment = require('../models/payment');
+const Transaction = require('../models/transaction');
 
 const mockRabbitMQService = require('../services/rabbitmqService');
 

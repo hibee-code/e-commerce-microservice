@@ -1,4 +1,4 @@
-const Payment = require('../models/Payment');
+const Payment = require('../models/payment');
 const Joi = require('joi');
 const { publishToQueue } = require('../services/rabbitmqService');
 
