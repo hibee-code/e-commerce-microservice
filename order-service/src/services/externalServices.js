@@ -1,8 +1,9 @@
 const axios = require('axios');
+const { CUSTOMER_SERVICE_URL, PRODUCT_SERVICE_URL, PAYMENT_SERVICE_URL } = require('../../shared/config');
 
-const CUSTOMER_SERVICE_URL = process.env.CUSTOMER_SERVICE_URL || 'http://localhost:3001';
-const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3002';
-const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL || 'http://localhost:3004';
+const CUSTOMER_SERVICE_URL = process.env.CUSTOMER_SERVICE_URL;
+const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL;
+const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL;
 
 const validateCustomer = async (customerId) => {
   try {
